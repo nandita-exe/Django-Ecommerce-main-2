@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="">
+        <input type="number" name="quantity" id="" value="{{cart_item.quantity}}">
+        {% for size in product.size_variant.all %}
+                      
+                        <label class="custom-control custom-radio custom-control-inline">
+                          <input type="radio" onchange="" name="selected_size" {% if selected_size == size.size_name %} checked {% endif %} class="custom-control-input">
+                          <div class="custom-control-label">{{size.size_name}}</div>
+                        </label>
+    
+                      {% endfor %}
+    </form>
+</body>
+</html>

@@ -1,0 +1,44 @@
+{% extends "base/base.html"%}
+
+{%  block start %}
+<div class="bg-dark text-secondary px-4 py-5 text-center">
+    <div class="py-5">
+      <h1 class="display-5 fw-bold text-white">StyleFusion</h1>
+      <div class="col-lg-6 mx-auto">
+        <p class="fs-5 mb-4">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus repellendus corporis tempore quis eveniet. Consectetur accusamus magnam facilis. Magnam vel ut perspiciatis natus repellat reiciendis molestiae earum ipsa nostrum temporibus.</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+          <a href="#product" class="btn btn-primary btn-lg px-4 mx-4 me-sm-3 fw-bold">Shop Now</a>
+          {% if not request.user.is_authenticated %}
+          <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg px-4">Login</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<div class="container mt-5 pt-5" id="product">
+    <div class="row">
+        
+        {% for product in products %}
+        <div class="col-md-3">
+            <figure class="card card-product-grid">
+                <div class="img-wrap"> <img src="/media/{{product.product_images.first.image}}"> </div>
+                <figcaption class="info-wrap border-top">
+                    <a href="{% url 'get_product' product.slug %}" class="title">
+                        <b>{{product.product_name}}</b></a>
+                    <div class="price mt-2">${{product.price}}.00</div> <!-- price-wrap.// -->
+                </figcaption>
+            </figure> <!-- card // -->
+        </div> <!-- col.// -->
+
+        {% endfor %}
+      
+        
+       
+    </div>
+
+    </div>
+    {% include "base/footer.html"%}
+
+{% endblock %}

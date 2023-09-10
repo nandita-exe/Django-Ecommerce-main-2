@@ -1,0 +1,167 @@
+{% extends "base/base.html"%}
+
+{%  block start %}
+
+<section class="section-content padding-y bg">
+    <div class="container">
+    
+    <!-- ============================ COMPONENT 1 ================================= -->
+    <div class="card">
+        <div class="row no-gutters">
+            <aside class="col-md-6">
+    <article class="gallery-wrap"> 
+    <div class="img-big-wrap">
+      <div> <a href="#"><img src="/media/{{product.product_images.first.image}}"></a></div>
+    </div> <!-- slider-product.// -->
+    <div class="thumbs-wrap">
+      {% for image in product.product_images.all %}
+      <a href="#" class="item-thumb"> <img src="/media/{{image.image}}"></a>
+      
+      {% endfor %}
+
+    </div> <!-- slider-nav.// -->
+    </article> <!-- gallery-wrap .end// -->
+            </aside>
+            <main class="col-md-6 border-left">
+    <article class="content-body">
+    
+    <h2 class="title">{{product.product_name}}</h2>
+    
+    <div class="rating-wrap my-3">
+        <ul class="rating-stars">
+            <li style="width:80%" class="stars-active"> 
+                <i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+                <i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+                <i class="fa fa-star"></i> 
+            </li>
+            <li>
+                <i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+                <i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+                <i class="fa fa-star"></i> 
+            </li>
+        </ul>
+        <small class="label-rating text-muted">132 reviews</small>
+        <small class="label-rating text-success"> <i class="fa fa-clipboard-check"></i> 154 orders </small>
+    </div> <!-- rating-wrap.// -->
+    
+    <div class="mb-3"> 
+        <var class="price h4" id="price">Rs. 
+          {% if updated_price %}
+            {{updated_price}}
+          {% else %}
+            {{product.price}}
+          {% endif %}
+
+          .00</var> 
+    </div> <!-- price-detail-wrap .// -->
+    
+    <p>{{product.product_desription}}</p>
+    
+    
+    <dl class="row">
+      <dt class="col-sm-3">Model#</dt>
+      <dd class="col-sm-9">Odsy-1000</dd>
+    
+      <dt class="col-sm-3">Color</dt>
+      <dd class="col-sm-9">Brown</dd>
+    
+      <dt class="col-sm-3">Delivery</dt>
+      <dd class="col-sm-9">Russia, USA, and Europe </dd>
+    </dl>
+    
+    <hr>
+    <form action="{% url 'add_to_cart' product.uid %}">
+        <div class="form-row">
+            {% if product.size_variant.count %}
+            <div class="form-group col-md">
+                    <label>Select size</label>
+                    <div class="mt-1">
+                      {% for size in product.size_variant.all %}
+                      
+                        <label class="custom-control custom-radio custom-control-inline">
+                          <input type="radio" onchange="get_correct_price('{{size.size_name}}')" required name="variant" value="{{size.size_name}}" {% if selected_size == size.size_name %} checked {% endif %} class="custom-control-input">
+                          <div class="custom-control-label">{{size.size_name}}</div>
+                        </label>
+    
+                      {% endfor %}
+    
+                    </div>
+            </div>
+            {% endif %}
+            <!-- col.// -->
+        </div> <!-- row.// -->
+    <button type="submit" class="btn btn-primary">add</button>
+        <!-- <a href="{% url 'add_to_cart' product.uid %}?variant={{selected_size}}&quantity={{quantity}}" class="btn  btn-primary"> Buy now </a>
+        <a href="{% url 'add_to_cart' product.uid %}?variant={{selected_size}}&quantity={{quantity}}" class="btn  btn-outline-primary"> <span class="text">Add to cart</span> <i class="fas fa-shopping-cart"></i>  </a> -->
+      </form>
+      </article> <!-- product-info-aside .// -->
+            </main> <!-- col.// -->
+        </div> <!-- row.// -->
+    </div> <!-- card.// -->
+    <!-- ============================ COMPONENT 1 END .// ================================= -->
+    
+
+    <div class="w-full mt-6">
+
+      {% if request.user.is_authenticated %}
+          <form method="post" action="." class="mt-6 mb-6 p-6 bg-gray-100 rounded-xl">
+              {% csrf_token %}
+              <div  class="container mt-4">
+                <h2 class="text">Tell us about your experience</h2>
+                <div class="form-group col-md-3 col-4">
+                  <select class="form-control" id="exampleFormControlSelect1" name="rating">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                  </select>
+                </div>
+                <div class="col-span-full">
+                  <label for="content" class="block text-sm font-medium leading-6 text-gray-900">Comment</label>
+                  <div class="mt-2">
+                    <textarea id="content" name="content" rows="3" class="form-control"></textarea>
+                  </div>
+                  <!-- <p class="mt-3 text-sm leading-6 text-gray-600">Tell us about your experience.</p> -->
+                </div>
+                <div class="mt-2">
+                  <button class="btn  btn-primary">Submit</button>
+              </div>
+               
+              </div>
+
+
+              
+          </form>
+      {% endif %}
+      <div class="container mt-3">
+        <h2 class="text-xl">Reviews</h2>
+
+
+      {% for review in product.reviews.all %}
+      <div class="card">
+        <div class="card-body">
+          <h5 class="bold">{{review.created_by}}</h5>
+          <p class="">Rating: {{ review.rating }}/6, On: {{ review.created_at|date:"Y-m-d" }}</p>
+          <p class="card-text">
+            {{ review.content }}</p>
+          <p class="card-text"></p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+    </div>
+    </section>
+    {% include "base/footer.html"%}
+    <script>
+      quantity=getElementById("quantity").value
+      function get_correct_price(size, quantity) {
+        window.location.href= window.location.pathname+`?size=${size}`
+        // console.log(size)
+        
+      }
+      
+    </script>
+
+{% endblock %}
